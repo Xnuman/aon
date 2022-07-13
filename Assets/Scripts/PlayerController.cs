@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     public Camera sceneCamera;
 
+    public Camera sceneCamera1;
+    public Camera sceneCamera2;
+
     public enum InstrumentMode
     {
         hand,
@@ -17,6 +20,7 @@ public class PlayerController : MonoBehaviour
     };
 
     private InstrumentMode mode;
+    private bool isCutting = false;
 
     public InstrumentMode CurrentMode => mode;
 
@@ -28,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         Debug.Log("PlayerController::Awake()");
-        GameController.instance.playerController = this;
+        GameController.instance.m_playerController = this;
         mode = InstrumentMode.knife;
     }
     void Start()

@@ -1994,6 +1994,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuController: {fileID: 1163025160}
   audioManager: {fileID: 1936338309}
+  playerController: {fileID: 0}
   newGameLevel: MainLevelScene
 --- !u!4 &264731335
 Transform:

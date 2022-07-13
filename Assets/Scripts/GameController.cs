@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
+    /* TODO: change serialize field + public to something less stupid */
     [Header("Game Controllers")]
-    [SerializeField] private MainMenuUIController menuController  = null;
-    [SerializeField] private AudioManager   audioManager    = null;
-
-    public PlayerController playerController = null;
+    [SerializeField] public MainMenuUIController m_menuController   = null;
+    [SerializeField] public AudioManager         m_audioManager     = null;
+    [SerializeField] public BodyController       m_bodyController   = null;
+    [SerializeField] public PlayerController     m_playerController = null;
     [Header("Level settings")]
     [SerializeField] private string newGameLevel;
 
@@ -41,13 +42,13 @@ public class GameController : MonoBehaviour
             ApplyDefaultAudioSettings();
         }
 
-        if (audioManager)
+        if (m_audioManager)
         {
-            audioManager.Init();
+            m_audioManager.Init();
         }
-        if (menuController)
+        if (m_menuController)
         {
-            menuController.Init();
+            m_menuController.Init();
         }
     }
 
