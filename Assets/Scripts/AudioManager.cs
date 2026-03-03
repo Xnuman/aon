@@ -1,52 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
-
     [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource effects;
     [SerializeField] private AudioSource ambient;
 
-    private float masterVolume;
-    private float musicVolume;
-    private float effectVolume;
-    private float ambientVolume;
+    [SerializeField] private AudioMixer mainAudioMixer;
+
+    AudioSource currentlyPlayingMusic;
 
     private SettingsData.AudioSettings cfgSettings = null;
 
-    public void SetMasterVolume(float volume)
+    private float convertToLogarithmic(float volume)
     {
-        masterVolume = volume;
+        volume = Mathf.Clamp(volume, 0.0001f, 1.0f);
 
-        SetMusicVolume(musicVolume);
-        SetEffectsVolume(effectVolume);
-        SetAmbientVolume(ambientVolume);
+        return Mathf.Log10(volume) * 20;
     }
 
+    private void SetMixerGroupVolume(string group, float volume)
+    {
+        if (mainAudioMixer == null)
+            return;
+
+        mainAudioMixer.SetFloat(group, convertToLogarithmic(volume));
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        SetMixerGroupVolume("MasterVolume", volume);
+    }
 
     public void SetMusicVolume(float volume)
     {
-        musicVolume = volume;
-        SetVolume(music, musicVolume);
+        SetMixerGroupVolume("MusicVolume", volume);
     }
 
     public void SetEffectsVolume(float volume)
     {
-        effectVolume = volume;
-        SetVolume(effects, volume);
+        SetMixerGroupVolume("EffectsVolume", volume);
     }
 
     public void SetAmbientVolume(float volume)
     {
-        ambientVolume = volume;
-        SetVolume(ambient, volume);
+        SetMixerGroupVolume("AmbientVolume", volume);
     }
 
-    public void SetVolume(AudioSource audioSource, float volume)
+    public void ApplyAudioSettings(SettingsData.AudioSettings settings)
     {
-        audioSource.volume = masterVolume * volume;
+        if (settings == null)
+            return;
+
+        SetMasterVolume(settings.masterVolume);
+        SetMusicVolume(settings.musicVolume);
+        SetAmbientVolume(settings.ambientVolume);
+        SetEffectsVolume(settings.effectsVolume);
     }
 
     public void UpdateCfgSettings()
@@ -56,7 +68,7 @@ public class AudioManager : MonoBehaviour
 
     public void ResetToCfgSettings()
     {
-        masterVolume = cfgSettings.masterVolume;
+        SetMasterVolume(cfgSettings.masterVolume);
         SetMusicVolume(cfgSettings.musicVolume);
         SetEffectsVolume(cfgSettings.effectsVolume);
         SetAmbientVolume(cfgSettings.ambientVolume);
@@ -66,20 +78,5 @@ public class AudioManager : MonoBehaviour
     {
         UpdateCfgSettings();
         ResetToCfgSettings();
-    }
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(this);
-    }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
     }
 }

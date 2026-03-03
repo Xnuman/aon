@@ -18,6 +18,16 @@ public class SettingsData
         public float musicVolume;
         public float effectsVolume;
         public float ambientVolume;
+
+        public static bool operator ==(AudioSettings a, AudioSettings b)
+        {
+            return a.masterVolume == b.masterVolume && a.musicVolume == b.musicVolume && a.effectsVolume == b.effectsVolume && a.ambientVolume == b.ambientVolume;
+        }
+
+        public static bool operator !=(AudioSettings a, AudioSettings b)
+        {
+            return !(a == b);
+        }
     }
 
     public AudioSettings audioSettings;
@@ -26,16 +36,16 @@ public class GameSettings : MonoBehaviour
 {
 
     public SettingsData settings;
-    private static string path => Path.Combine(Application.persistentDataPath, "necro_settings.dat");
+    private static string SettingsPath => System.IO.Path.Combine(Application.persistentDataPath, "necro_settings.dat");
     public static void LoadSettings(out SettingsData data)
     {
-        if(File.Exists(path) == false)
+        if(File.Exists(SettingsPath) == false)
         {
             data = null;
             return;
         }
 
-        string fileData = File.ReadAllText(path);
+        string fileData = File.ReadAllText(SettingsPath);
         
         data = JsonUtility.FromJson<SettingsData>(fileData);
     }
@@ -43,6 +53,6 @@ public class GameSettings : MonoBehaviour
     public static void SaveSettings(SettingsData data)
     {
         string fileData = JsonUtility.ToJson(data);
-        File.WriteAllText(path, fileData);
+        File.WriteAllText(SettingsPath, fileData);
     }
 }

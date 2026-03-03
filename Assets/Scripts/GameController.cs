@@ -6,12 +6,13 @@ public class GameController : MonoBehaviour
 {
     /* TODO: change serialize field + public to something less stupid */
     [Header("Game Controllers")]
-    [SerializeField] public MainMenuUIController m_menuController   = null;
-    [SerializeField] public AudioManager         m_audioManager     = null;
-    [SerializeField] public BodyController       m_bodyController   = null;
-    [SerializeField] public PlayerController     m_playerController = null;
+    [SerializeField] public MainMenuUIController m_uiMenuController = null;
+    [SerializeField] public SettingsUIController m_uiSettingsController = null;
+    [SerializeField] public AudioManager m_audioManager = null;
     [Header("Level settings")]
     [SerializeField] private string newGameLevel;
+    [Header("Default settings")]
+    [SerializeField] private SettingsData.AudioSettings m_defaultAudioSettings;
 
     private string levelToLoad;
 
@@ -21,16 +22,28 @@ public class GameController : MonoBehaviour
     public static GameController instance = null;
 
     public SettingsData.AudioSettings GetAudioSettings => settings.audioSettings;
-
+    public SettingsData.AudioSettings GetDefaultAudioSettings => m_defaultAudioSettings;
     public void UpdateAudioSettings(in SettingsData.AudioSettings newSettings)
     {
         settings.audioSettings = newSettings;
+        if (m_audioManager != null)
+        {
+            m_audioManager.UpdateCfgSettings();
+            m_audioManager.ResetToCfgSettings();
+            m_uiSettingsController.ResetAudioSettingsToCfg(newSettings);
+        }
     }
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {
@@ -46,18 +59,19 @@ public class GameController : MonoBehaviour
         {
             m_audioManager.Init();
         }
-        if (m_menuController)
+        if (m_uiMenuController)
         {
-            m_menuController.Init();
+            m_uiMenuController.Init();
+        }
+        if(m_uiSettingsController)
+        {
+            m_uiSettingsController.Init();
         }
     }
 
     public void ApplyDefaultAudioSettings()
     {
-        GetAudioSettings.masterVolume = 0.5f;
-        GetAudioSettings.musicVolume = 1.0f;
-        GetAudioSettings.effectsVolume = 1.0f;
-        GetAudioSettings.ambientVolume = 1.0f;
+        UpdateAudioSettings(m_defaultAudioSettings);
     }
 
     public void LoadSettingsFromDisk()
