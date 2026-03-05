@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 [System.Serializable]
 public class SettingsData
@@ -12,22 +13,41 @@ public class SettingsData
     }
 
     [System.Serializable]
-    public class AudioSettings
+    public class AudioSettings : IEquatable<AudioSettings>
     {
         public float masterVolume;
         public float musicVolume;
         public float effectsVolume;
         public float ambientVolume;
 
-        public static bool operator ==(AudioSettings a, AudioSettings b)
+        public bool Equals(AudioSettings other)
         {
-            return a.masterVolume == b.masterVolume && a.musicVolume == b.musicVolume && a.effectsVolume == b.effectsVolume && a.ambientVolume == b.ambientVolume;
+            if(other == null)
+                return false;
+
+            return masterVolume == other.masterVolume && musicVolume == other.musicVolume && effectsVolume == other.effectsVolume && ambientVolume == other.ambientVolume;
         }
 
-        public static bool operator !=(AudioSettings a, AudioSettings b)
+        public override bool Equals(object obj)
         {
-            return !(a == b);
+            return Equals(obj as AudioSettings);
         }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(masterVolume, musicVolume, effectsVolume, ambientVolume);
+        }
+
+        public static bool operator ==(AudioSettings a, AudioSettings b)
+        {
+            if( ReferenceEquals( a, b) )
+                return true;
+            if( a is null )
+                return false;
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(AudioSettings a, AudioSettings b) => !(a == b);
     }
 
     public AudioSettings audioSettings;

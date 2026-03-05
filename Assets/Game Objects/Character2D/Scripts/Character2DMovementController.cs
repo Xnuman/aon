@@ -8,14 +8,17 @@ public class Character2DMovementController : MonoBehaviour
 
     private int _orientationMultiplier = 1;
 
-    private bool isJumping = false;
-
     void Start()
     {
     }
 
     private void FixedUpdate()
     {
+        if (_rb == null)
+        {
+            return;
+        }
+
         UpdateSpeed();
     }
 

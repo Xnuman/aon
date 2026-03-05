@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class SettingsUIController : MonoBehaviour
 {
-
     [Header("Volume Settings")]
 
     [SerializeField] private Slider _MasterVolumeSlider = null;
@@ -14,23 +13,35 @@ public class SettingsUIController : MonoBehaviour
 
     [SerializeField] private GameObject ConfirmationPrompt = null;
 
-    [SerializeField] private Button AudioSettingsDefaultSettingsButton = null;
+    [SerializeField] private Button _AudioSettingsDefaultSettingsButton = null;
 
     SettingsData.AudioSettings cfgAudioSettings = null;
 
     public void Init()
     {
-        InitSliderText(_MasterVolumeSlider);
-        InitSliderText(_MusicVolumeSlider);
-        InitSliderText(_EffectsVolumeSlider);
-        InitSliderText(_AmbientVolumeSlider);
+        //GameObject AudioOptionsDialogueGameObject = GameController.instance.m_dialogueManager.dialogues["AudioOptions"];
+        //AudioOptionsDialogue AudioOptionsDialogue = null;
 
-        cfgAudioSettings = GameController.instance.GetAudioSettings;
+        //AudioOptionsDialogue = AudioOptionsDialogueGameObject.GetComponentInChildren<AudioOptionsDialogue>(true);
 
-        if (cfgAudioSettings == GameController.instance.GetDefaultAudioSettings)
-            AudioSettingsDefaultSettingsButton.interactable = false;
+        //_MasterVolumeSlider = AudioOptionsDialogue._MasterVolumeSlider;
+        //_MusicVolumeSlider = AudioOptionsDialogue._MusicVolumeSlider;
+        //_EffectsVolumeSlider = AudioOptionsDialogue._EffectsVolumeSlider;
+        //_AmbientVolumeSlider = AudioOptionsDialogue._AmbientVolumeSlider;
 
-        ResetAudioSettingsToCfg(cfgAudioSettings);
+        //_AudioSettingsDefaultSettingsButton = AudioOptionsDialogue._ResetButton;
+
+        //InitSliderText(_MasterVolumeSlider);
+        //InitSliderText(_MusicVolumeSlider);
+        //InitSliderText(_EffectsVolumeSlider);
+        //InitSliderText(_AmbientVolumeSlider);
+
+        //cfgAudioSettings = GameController.instance.GetAudioSettings;
+
+        //if (cfgAudioSettings == GameController.instance.GetDefaultAudioSettings)
+        //    _AudioSettingsDefaultSettingsButton.interactable = false;
+
+        //ResetAudioSettingsToCfg(cfgAudioSettings);
     }
 
     public void InitSliderText(Slider slider)

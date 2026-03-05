@@ -6,9 +6,9 @@ public class GameController : MonoBehaviour
 {
     /* TODO: change serialize field + public to something less stupid */
     [Header("Game Controllers")]
-    [SerializeField] public MainMenuUIController m_uiMenuController = null;
-    [SerializeField] public SettingsUIController m_uiSettingsController = null;
-    [SerializeField] public AudioManager m_audioManager = null;
+    public SettingsUIController m_uiSettingsController = null;
+    public AudioManager m_audioManager = null;
+    public DialogueManager m_dialogueManager = null;
     [Header("Level settings")]
     [SerializeField] private string newGameLevel;
     [Header("Default settings")]
@@ -47,6 +47,11 @@ public class GameController : MonoBehaviour
     }
     private void Start()
     {
+        if( m_dialogueManager )
+        {
+            m_dialogueManager.Init();
+        }
+
         LoadSettingsFromDisk();
 
         if (settings == null)
@@ -59,13 +64,21 @@ public class GameController : MonoBehaviour
         {
             m_audioManager.Init();
         }
-        if (m_uiMenuController)
-        {
-            m_uiMenuController.Init();
-        }
         if(m_uiSettingsController)
         {
             m_uiSettingsController.Init();
+        }
+
+        if( m_dialogueManager )
+        {
+            var MainMenuDialogue = m_dialogueManager.CreateDialogue("MainMenu");
+
+            GameObject canvas = GameObject.Find("Canvas");
+            var cc = canvas.GetComponent<Canvas>();
+
+            MainMenuDialogue.transform.SetParent(cc.transform, false);
+            MainMenuDialogue.SetActive(true);
+            MainMenuDialogue.GetComponent<MainMenuPanel>().Init();
         }
     }
 
