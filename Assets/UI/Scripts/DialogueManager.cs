@@ -18,17 +18,14 @@ public class DialogueManager : MonoBehaviour
         dialogueObjects ??= new List<GameObject>();
     }
 
-    public GameObject CreateDialogue(string dialogueName)
+    public GameObject CreateDialogue(string dialogueName, Canvas canvas)
     {
-
-       // if(dialogueStack.Contains(dialogueName))
-
         if(dialogueNames.Contains(dialogueName))
         {
             int index = dialogueNames.IndexOf(dialogueName);
-            var go = Instantiate(dialogueObjects[index]);
-            dialogueStack.Push(new KeyValuePair<string, GameObject>(dialogueName, go));
-            return go;
+            var dialogueObject = Instantiate(dialogueObjects[index], canvas.transform, false);
+            dialogueStack.Push(new KeyValuePair<string, GameObject>(dialogueName, dialogueObject));
+            return dialogueObject;
         }
 
         return null;
@@ -36,6 +33,7 @@ public class DialogueManager : MonoBehaviour
 
     public void PopDialogue()
     {
-        dialogueStack.Pop();
+        GameObject dialogueToRemove = dialogueStack.Pop().Value;
+        Destroy(dialogueToRemove);
     }
 }

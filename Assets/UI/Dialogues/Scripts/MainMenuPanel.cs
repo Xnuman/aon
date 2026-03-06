@@ -12,23 +12,27 @@ public class MainMenuPanel : MonoBehaviour
     public Button _Quit = null;
 
     private DialogueManager _dialogueManager = null;
+    private Canvas _canvas = null;
 
-    public void Init()
+    public void Init(Canvas canvas)
     {
+        Debug.Log("MainMenuPanel: Init");
+
         _dialogueManager = GameController.instance.m_dialogueManager;
+        _canvas = canvas;
 
         _NewGame.onClick.AddListener(() =>
         {
+            Debug.Log("NewGame: OnClick");
             StartGameDialogYes();
         });
 
         _Options.onClick.AddListener(() =>
         {
-            var go = _dialogueManager.CreateDialogue("Options");
-            Canvas canvas = this.GetComponentInParent<Canvas>();
+            var go = _dialogueManager.CreateDialogue("Options", _canvas);
 
-            go.transform.SetParent(canvas.transform, false);
-            go.SetActive(true);
+            OptionsMenuPanel optionsMenuPanelComponent = go.GetComponent<OptionsMenuPanel>();
+            optionsMenuPanelComponent.Init(_canvas);
         });
     }
     public void StartGameDialogYes()

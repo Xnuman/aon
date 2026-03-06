@@ -44,14 +44,14 @@ public class SettingsUIController : MonoBehaviour
         //ResetAudioSettingsToCfg(cfgAudioSettings);
     }
 
-    public void InitSliderText(Slider slider)
-    {
-        var textbox = slider.gameObject.GetComponentInChildren<TextListener>();
-        if (textbox)
-        {
-            textbox.Init();
-        }
-    }
+    //public void InitSliderText(Slider slider)
+    //{
+    //    var textbox = slider.gameObject.GetComponentInChildren<TextListener>();
+    //    if (textbox)
+    //    {
+    //        textbox.Init();
+    //    }
+    //}
 
     public void AudioSettingsOnApply()
     {

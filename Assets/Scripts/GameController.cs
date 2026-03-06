@@ -23,17 +23,6 @@ public class GameController : MonoBehaviour
 
     public SettingsData.AudioSettings GetAudioSettings => settings.audioSettings;
     public SettingsData.AudioSettings GetDefaultAudioSettings => m_defaultAudioSettings;
-    public void UpdateAudioSettings(in SettingsData.AudioSettings newSettings)
-    {
-        settings.audioSettings = newSettings;
-        if (m_audioManager != null)
-        {
-            m_audioManager.UpdateCfgSettings();
-            m_audioManager.ResetToCfgSettings();
-            m_uiSettingsController.ResetAudioSettingsToCfg(newSettings);
-        }
-    }
-
     private void Awake()
     {
         if (instance != null)
@@ -54,11 +43,10 @@ public class GameController : MonoBehaviour
 
         LoadSettingsFromDisk();
 
-        if (settings == null)
-        {
-            settings = new SettingsData();
-            ApplyDefaultAudioSettings();
-        }
+        settings ??= new SettingsData
+            {
+                audioSettings = m_defaultAudioSettings
+            };
 
         if (m_audioManager)
         {
@@ -71,22 +59,13 @@ public class GameController : MonoBehaviour
 
         if( m_dialogueManager )
         {
-            var MainMenuDialogue = m_dialogueManager.CreateDialogue("MainMenu");
-
             GameObject canvas = GameObject.Find("Canvas");
             var cc = canvas.GetComponent<Canvas>();
 
-            MainMenuDialogue.transform.SetParent(cc.transform, false);
-            MainMenuDialogue.SetActive(true);
-            MainMenuDialogue.GetComponent<MainMenuPanel>().Init();
+            var MainMenuDialogue = m_dialogueManager.CreateDialogue("MainMenu", cc);
+            MainMenuDialogue.GetComponent<MainMenuPanel>().Init(cc);
         }
     }
-
-    public void ApplyDefaultAudioSettings()
-    {
-        UpdateAudioSettings(m_defaultAudioSettings);
-    }
-
     public void LoadSettingsFromDisk()
     {
         GameSettings.LoadSettings(out settings);
@@ -94,7 +73,6 @@ public class GameController : MonoBehaviour
 
     public void SaveSettingsToDisk()
     {
-
         if (settings != null)
         {
             GameSettings.SaveSettings(settings);

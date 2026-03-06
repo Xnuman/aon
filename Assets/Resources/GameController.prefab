@@ -177,7 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f7f612462b887b4f9937cfeb15a1a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_uiMenuController: {fileID: 1553578685076108022}
   m_uiSettingsController: {fileID: 7668757844488386377}
   m_audioManager: {fileID: 9023891543468871324}
   m_dialogueManager: {fileID: 4762611512961059332}
@@ -642,7 +641,9 @@ MonoBehaviour:
   - MainMenu
   - Options
   - AudioOptions
+  - GraphicsOptions
   dialogueObjects:
   - {fileID: 2753057261630392840, guid: d35d25b05728182419ebc92c97aff89a, type: 3}
   - {fileID: 217428722504738089, guid: 86b6dc27deff81a41928943db3706191, type: 3}
   - {fileID: 843267967662271557, guid: ef914212e8e73ed419d60554451b2144, type: 3}
+  - {fileID: 7978703278904713975, guid: 19b632e81fa7b7646b2d8dc5152d6207, type: 3}

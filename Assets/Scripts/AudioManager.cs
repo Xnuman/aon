@@ -13,8 +13,6 @@ public class AudioManager : MonoBehaviour
 
     AudioSource currentlyPlayingMusic;
 
-    private SettingsData.AudioSettings cfgSettings = null;
-
     private float convertToLogarithmic(float volume)
     {
         volume = Mathf.Clamp(volume, 0.0001f, 1.0f);
@@ -60,23 +58,8 @@ public class AudioManager : MonoBehaviour
         SetAmbientVolume(settings.ambientVolume);
         SetEffectsVolume(settings.effectsVolume);
     }
-
-    public void UpdateCfgSettings()
-    {
-        cfgSettings = GameController.instance.GetAudioSettings;
-    }
-
-    public void ResetToCfgSettings()
-    {
-        SetMasterVolume(cfgSettings.masterVolume);
-        SetMusicVolume(cfgSettings.musicVolume);
-        SetEffectsVolume(cfgSettings.effectsVolume);
-        SetAmbientVolume(cfgSettings.ambientVolume);
-    }
-
     public void Init()
     {
-        UpdateCfgSettings();
-        ResetToCfgSettings();
+        ApplyAudioSettings(GameController.instance.GetAudioSettings);
     }
 }
