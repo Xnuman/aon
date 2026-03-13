@@ -11,8 +11,6 @@ public class Character2DCombat : MonoBehaviour
     private bool isAttacking = false;
 
     public bool IsAttacking() => isAttacking;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         isAttacking = false;
@@ -33,12 +31,6 @@ public class Character2DCombat : MonoBehaviour
             StopCoroutine(attackCoroutine);
         }
     }
-
-    //public void Attack(Character2DHealth enemyHealth)
-    //{
-    //    enemyHealth.SetHealth(enemyHealth.GetHealth() - damage);
-    //}
-
     IEnumerator Attack(Character2DHealth enemyHealth)
     {
         while(enemyHealth != null && enemyHealth.GetHealth() > 0.0f)

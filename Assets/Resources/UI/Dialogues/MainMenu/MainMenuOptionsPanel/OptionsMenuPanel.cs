@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class OptionsMenuPanel : MonoBehaviour
 {
@@ -20,6 +19,16 @@ public class OptionsMenuPanel : MonoBehaviour
         _Graphics.onClick.AddListener(() =>
         {
             GameObject dialogue = OnClickCreateDialogue("GraphicsOptions");
+            GraphicsOptionsDialogue graphicsSettingsDialogue;
+
+            if( dialogue.TryGetComponent<GraphicsOptionsDialogue>(out graphicsSettingsDialogue))
+            {
+                graphicsSettingsDialogue.Init(canvas);
+            }
+            else
+            {
+                Debug.Log("Type of GraphicsOptionsDialogue is not the same as dialogue in dialogueManager named GraphicsOptions");
+            }
         });
 
         _Audio.onClick.AddListener(() =>

@@ -15,13 +15,18 @@ public class Character2DHealth : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    public void ManualUpdate()
+    {
+
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if( currentHealth <= 0.0f )
+        if (currentHealth <= 0.0f)
         {
             gameObject.GetComponent<Character2DCombat>().StopAttacking();
-            Destroy( gameObject );
+            Destroy(gameObject);
         }
     }
 }

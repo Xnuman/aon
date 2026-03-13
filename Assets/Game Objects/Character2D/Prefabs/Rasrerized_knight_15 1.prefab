@@ -446,7 +446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7614611392184722844, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.26978698
+      value: 0.26973513
       objectReference: {fileID: 0}
     - target: {fileID: -7614611392184722844, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.x
@@ -458,7 +458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7614611392184722844, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.96292
+      value: -0.96293455
       objectReference: {fileID: 0}
     - target: {fileID: -7614611392184722844, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -686,7 +686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4907391292031245285, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9702711
+      value: 0.970283
       objectReference: {fileID: 0}
     - target: {fileID: 4907391292031245285, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.x
@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4907391292031245285, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.24202062
+      value: -0.2419731
       objectReference: {fileID: 0}
     - target: {fileID: 4907391292031245285, guid: 56bd483e9c4c9ff418908982118a0486, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -852,6 +852,7 @@ MonoBehaviour:
   combat: {fileID: 688182127172356541}
   health: {fileID: 2997067886883885608}
   rb: {fileID: 2069099080615058408}
+  myIndexInUnitsPositions: 0
 --- !u!50 &2069099080615058408
 Rigidbody2D:
   serializedVersion: 5
@@ -860,7 +861,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5710470463523029451}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

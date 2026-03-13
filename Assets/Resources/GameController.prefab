@@ -160,8 +160,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8932277478036510186}
-  - {fileID: 5288601030143259104}
-  - {fileID: 8578754772308001750}
   - {fileID: 4168809702678869010}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -177,7 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f7f612462b887b4f9937cfeb15a1a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_uiSettingsController: {fileID: 7668757844488386377}
   m_audioManager: {fileID: 9023891543468871324}
   m_dialogueManager: {fileID: 4762611512961059332}
   newGameLevel: FightLevel
@@ -237,54 +234,6 @@ MonoBehaviour:
   effects: {fileID: 846535960752398428}
   ambient: {fileID: 8981706244664648610}
   mainAudioMixer: {fileID: 24100000, guid: 033d64bb717c6ec4fb2c7e32d7978ae9, type: 2}
---- !u!1 &833113374058851313
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5288601030143259104}
-  - component: {fileID: 1553578685076108022}
-  m_Layer: 0
-  m_Name: MainMenuUIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5288601030143259104
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833113374058851313}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -135.78436, y: -31.398071, z: 6.8083878}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9020496154359750706}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1553578685076108022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833113374058851313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9833e9a2f9048814ca147d151af40dca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Continue: {fileID: 0}
-  _NewGame: {fileID: 0}
-  _Options: {fileID: 0}
-  _Quit: {fileID: 0}
 --- !u!1 &1386939652887063017
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,56 +492,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &6343899189645205347
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8578754772308001750}
-  - component: {fileID: 7668757844488386377}
-  m_Layer: 0
-  m_Name: SettingsUIController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8578754772308001750
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6343899189645205347}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9020496154359750706}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7668757844488386377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6343899189645205347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c78614460b8c8f940a03cbdb3187fd68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _MasterVolumeSlider: {fileID: 0}
-  _MusicVolumeSlider: {fileID: 0}
-  _EffectsVolumeSlider: {fileID: 0}
-  _AmbientVolumeSlider: {fileID: 0}
-  ConfirmationPrompt: {fileID: 0}
-  _AudioSettingsDefaultSettingsButton: {fileID: 0}
 --- !u!1 &6873363854379178021
 GameObject:
   m_ObjectHideFlags: 0

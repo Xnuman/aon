@@ -1,28 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     /* TODO: change serialize field + public to something less stupid */
     [Header("Game Controllers")]
-    public SettingsUIController m_uiSettingsController = null;
     public AudioManager m_audioManager = null;
     public DialogueManager m_dialogueManager = null;
     [Header("Level settings")]
     [SerializeField] private string newGameLevel;
     [Header("Default settings")]
-    [SerializeField] private SettingsData.AudioSettings m_defaultAudioSettings;
+    [SerializeField] private SettingsData.AudioSettings     m_defaultAudioSettings;
+    [SerializeField] private SettingsData.GraphicsSettings  m_defaultGraphicsSettings;
 
     private string levelToLoad;
 
     private SettingsData settings;
 
-
     public static GameController instance = null;
 
-    public SettingsData.AudioSettings GetAudioSettings => settings.audioSettings;
+    public SettingsData.AudioSettings GetAudioSettings => settings._audioSettings;
     public SettingsData.AudioSettings GetDefaultAudioSettings => m_defaultAudioSettings;
+    public SettingsData.GraphicsSettings GetGraphicsSettings => settings._graphicsSettings;
+    public SettingsData.GraphicsSettings GetDefaultGraphicsSettings => m_defaultGraphicsSettings;
     private void Awake()
     {
         if (instance != null)
@@ -45,18 +44,16 @@ public class GameController : MonoBehaviour
 
         settings ??= new SettingsData
             {
-                audioSettings = m_defaultAudioSettings
+                _audioSettings = m_defaultAudioSettings,
+                _graphicsSettings = m_defaultGraphicsSettings
             };
+
+        SetFullscreen(settings._graphicsSettings.isFullscreen);
 
         if (m_audioManager)
         {
             m_audioManager.Init();
         }
-        if(m_uiSettingsController)
-        {
-            m_uiSettingsController.Init();
-        }
-
         if( m_dialogueManager )
         {
             GameObject canvas = GameObject.Find("Canvas");
@@ -70,7 +67,10 @@ public class GameController : MonoBehaviour
     {
         GameSettings.LoadSettings(out settings);
     }
-
+    public void SetFullscreen(bool value)
+    {
+        Screen.fullScreenMode = value ? FullScreenMode.ExclusiveFullScreen : FullScreenMode.Windowed;
+    }
     public void SaveSettingsToDisk()
     {
         if (settings != null)
@@ -86,6 +86,11 @@ public class GameController : MonoBehaviour
             SetLevel(newGameLevel);
             LoadLevel();
         }
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     private void LoadLevel()

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
@@ -9,7 +7,8 @@ public class SettingsData
 { 
     public SettingsData()
     {
-        audioSettings = new AudioSettings();
+        _audioSettings = new AudioSettings();
+        _graphicsSettings = new GraphicsSettings();
     }
 
     [System.Serializable]
@@ -49,12 +48,17 @@ public class SettingsData
 
         public static bool operator !=(AudioSettings a, AudioSettings b) => !(a == b);
     }
+    [System.Serializable]
+    public class GraphicsSettings
+    {
+        public bool isFullscreen;
+    }
 
-    public AudioSettings audioSettings;
+    public AudioSettings _audioSettings;
+    public GraphicsSettings _graphicsSettings;
 }
 public class GameSettings : MonoBehaviour
 {
-
     public SettingsData settings;
     private static string SettingsPath => System.IO.Path.Combine(Application.persistentDataPath, "necro_settings.dat");
     public static void LoadSettings(out SettingsData data)

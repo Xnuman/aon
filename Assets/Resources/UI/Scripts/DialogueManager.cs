@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -24,6 +23,12 @@ public class DialogueManager : MonoBehaviour
         {
             int index = dialogueNames.IndexOf(dialogueName);
             var dialogueObject = Instantiate(dialogueObjects[index], canvas.transform, false);
+
+            if (dialogueStack.Count > 0)
+            {
+                dialogueStack.Peek().Value.SetActive(false);
+            }
+
             dialogueStack.Push(new KeyValuePair<string, GameObject>(dialogueName, dialogueObject));
             return dialogueObject;
         }
@@ -35,5 +40,8 @@ public class DialogueManager : MonoBehaviour
     {
         GameObject dialogueToRemove = dialogueStack.Pop().Value;
         Destroy(dialogueToRemove);
+
+        GameObject newTopDialogue = dialogueStack.Peek().Value;
+        newTopDialogue.SetActive(true);
     }
 }

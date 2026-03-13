@@ -1,5 +1,5 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class NPC : MonoBehaviour
 {
@@ -10,31 +10,29 @@ public class NPC : MonoBehaviour
     [SerializeField] private Character2DHealth health;
     [SerializeField] private Rigidbody2D rb;
 
-    private enum CharacterState
+    public int myIndexInUnitsPositions;
+
+    public enum CharacterState
     {
         Idle,
         Moving,
         Fighting
     };
 
+    public void SetCharacterState(CharacterState state) => _characterState = state;
     private CharacterState _characterState;
     private HorizontalOrientation _characterMovementOrientation;
 
-    void Start()
+    public void InitCharacter()
     {
-        Debug.Log("Start()");
-
-        if(CompareTag("Ally"))
+        if (CompareTag("Ally"))
         {
             _characterMovementOrientation = HorizontalOrientation.Right;
         }
-        else if(CompareTag("Enemy"))
+        else if (CompareTag("Enemy"))
         {
             _characterMovementOrientation = HorizontalOrientation.Left;
         }
-
-        //_movementController = gameObject.AddComponent<Character2DMovementController>();
-        //_animatorController = gameObject.AddComponent<Character2DAnimatorController>();
 
         _animatorController.Init();
         _movementController.Init(rb);
@@ -43,34 +41,27 @@ public class NPC : MonoBehaviour
         _animatorController.SetAnimationOrientation(_characterMovementOrientation);
         _characterState = CharacterState.Moving;
     }
-    void FixedUpdate()
-    {
-    }
-
-    private void Update()
+    public void UpdateCharacter()
     {
         switch (_characterState)
         {
             case CharacterState.Idle:
                 _animatorController.SetShouldRun(false);
+                _animatorController.SetShouldFight(false);
                 _movementController.SetSpeed(0.0f);
                 break;
             case CharacterState.Moving:
                 _animatorController.SetShouldRun(true);
+                _animatorController.SetShouldFight(false);
                 _movementController.SetSpeed(1.0f);
                 break;
             case CharacterState.Fighting:
                 _animatorController.SetShouldRun(false);
+                _animatorController.SetShouldFight(true);
                 _movementController.SetSpeed(0.0f);
                 break;
         };
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("3D Version is triggered");
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool foundAnotherNPC = collision.gameObject.TryGetComponent<NPC>(out var otherNPC);
@@ -113,7 +104,6 @@ public class NPC : MonoBehaviour
         {
             combat.StopAttacking();
         }
-        //movementController.Stop();
     }
 
     private bool IsNPCEnemy(NPC otherNPC)

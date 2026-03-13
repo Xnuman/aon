@@ -1,27 +1,18 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CharacterSpawner : MonoBehaviour
 {
-
     [SerializeField] private GameObject characterObject;
     [SerializeField] private string spawnGameObjectTag;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject SpawnCharacter(Vector2 position)
     {
-        
+        GameObject newCharacter = Instantiate(characterObject, new Vector3(position.x, position.y, 0), new Quaternion());
+        newCharacter.tag = spawnGameObjectTag;
+        return newCharacter;
     }
-
-    // Update is called once per frame
-    void Update()
+    public bool isAlly(string tag)
     {
-        
-    }
-
-    public void SpawnCharacter()
-    {
-        GameObject go = Instantiate(characterObject);
-        go.transform.position = gameObject.transform.position;
-        go.tag = spawnGameObjectTag;
+        return (string.Compare(tag, "Ally") == 0);
     }
 }

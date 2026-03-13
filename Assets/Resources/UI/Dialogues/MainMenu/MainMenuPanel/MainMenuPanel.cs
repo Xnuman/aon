@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 
 public class MainMenuPanel : MonoBehaviour
 {
@@ -33,6 +30,11 @@ public class MainMenuPanel : MonoBehaviour
 
             OptionsMenuPanel optionsMenuPanelComponent = go.GetComponent<OptionsMenuPanel>();
             optionsMenuPanelComponent.Init(_canvas);
+        });
+
+        _Quit.onClick.AddListener(() =>
+        {
+            GameController.instance.QuitGame();
         });
     }
     public void StartGameDialogYes()

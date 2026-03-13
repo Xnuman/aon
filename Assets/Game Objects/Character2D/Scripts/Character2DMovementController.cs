@@ -7,11 +7,6 @@ public class Character2DMovementController : MonoBehaviour
     [SerializeField] private float jumpPower;
 
     private int _orientationMultiplier = 1;
-
-    void Start()
-    {
-    }
-
     private void FixedUpdate()
     {
         if (_rb == null)
@@ -20,6 +15,11 @@ public class Character2DMovementController : MonoBehaviour
         }
 
         UpdateSpeed();
+    }
+
+    public void ManualUpdate()
+    {
+
     }
 
     public void Init(Rigidbody2D rb)
