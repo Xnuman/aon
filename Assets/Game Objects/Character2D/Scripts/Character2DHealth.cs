@@ -1,32 +1,37 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Character2DHealth : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private float _maxHealth;
+    private float _currentHealth;
 
-    [SerializeField] private float maxHealth;
-    private float currentHealth;
+    [SerializeField] private Slider healthBarSlider;
+    [SerializeField] private Image healthBarFill;
+    [SerializeField] private Gradient healthBarGradient;
 
-    public float GetHealth() => currentHealth;
-    public void SetHealth( float newHealth ) => currentHealth = newHealth;
+    public float GetHealth() => _currentHealth;
+    public void SetHealth( float newHealth ) => _currentHealth = newHealth;
 
     void Start()
     {
-        currentHealth = maxHealth;
+        
+    }
+
+    public void Init()
+    {
+        _currentHealth = _maxHealth;
+        healthBarSlider.maxValue = _maxHealth;
+        healthBarSlider.value = _maxHealth;
     }
 
     public void ManualUpdate()
     {
 
     }
-
-    // Update is called once per frame
     void Update()
     {
-        if (currentHealth <= 0.0f)
-        {
-            gameObject.GetComponent<Character2DCombat>().StopAttacking();
-            Destroy(gameObject);
-        }
+        healthBarSlider.value = _currentHealth;
+        healthBarFill.color = healthBarGradient.Evaluate(healthBarSlider.normalizedValue);
     }
 }

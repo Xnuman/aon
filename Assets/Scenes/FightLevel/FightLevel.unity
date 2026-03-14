@@ -234,6 +234,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NecroCastle
       objectReference: {fileID: 0}
+    - target: {fileID: 2545467806361161914, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3512032327778556599, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.37
@@ -274,6 +278,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5840190530865926275, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840190530865926275, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1938363129
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -289,7 +301,7 @@ GameObject:
   m_Component:
   - component: {fileID: 682330596}
   - component: {fileID: 682330595}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +384,7 @@ PrefabInstance:
     - target: {fileID: 2271182905694042034, guid: b31c5f9d3ef763b4abaf403bcf3b08f4, type: 3}
       propertyPath: characterObject
       value: 
-      objectReference: {fileID: 5710470463523029451, guid: 113c2aba8c4f90944b411530bf1ac331, type: 3}
+      objectReference: {fileID: 5776705341547673207, guid: e4e5a97af8369c34a85172c6ddbd0f05, type: 3}
     - target: {fileID: 2271182905694042034, guid: b31c5f9d3ef763b4abaf403bcf3b08f4, type: 3}
       propertyPath: spawnGameObjectTag
       value: Enemy
@@ -439,6 +451,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KingCastle
       objectReference: {fileID: 0}
+    - target: {fileID: 2545467806361161914, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3512032327778556599, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.14
@@ -482,6 +498,14 @@ PrefabInstance:
     - target: {fileID: 5840190530865926275, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
       propertyPath: m_FlipX
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840190530865926275, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840190530865926275, guid: 10d6681fdb624ba499a7cf5e842ce8b7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1938363129
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -988,8 +1012,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c36ae0ca18981fd49aaac25e960506aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAllyUnits: 2
-  maxEnemyUnits: 2
+  maxAllyUnits: 6
+  maxEnemyUnits: 6
   leftCastle: {fileID: 746731014}
   rightCastle: {fileID: 1617259845}
   ground: {fileID: 682330594}
@@ -1368,8 +1392,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1938363129
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e7cd1383aa5e74745a19052053644122, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1416,7 +1440,7 @@ PrefabInstance:
     - target: {fileID: 2271182905694042034, guid: b31c5f9d3ef763b4abaf403bcf3b08f4, type: 3}
       propertyPath: characterObject
       value: 
-      objectReference: {fileID: 5710470463523029451, guid: 113c2aba8c4f90944b411530bf1ac331, type: 3}
+      objectReference: {fileID: 5776705341547673207, guid: e4e5a97af8369c34a85172c6ddbd0f05, type: 3}
     - target: {fileID: 2271182905694042034, guid: b31c5f9d3ef763b4abaf403bcf3b08f4, type: 3}
       propertyPath: spawnGameObjectTag
       value: Ally

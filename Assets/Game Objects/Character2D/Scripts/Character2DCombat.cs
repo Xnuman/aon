@@ -3,43 +3,40 @@ using UnityEngine;
 
 public class Character2DCombat : MonoBehaviour
 {
+    [SerializeField] private float _damage;
+    [SerializeField] private GameObject _attackPoint;
+    [SerializeField] private float _radius;
 
-    [SerializeField] private float damage;
+    //[SerializeField] private LayerMask enemyLayerMask;
 
-    private IEnumerator attackCoroutine;
-
-    private bool isAttacking = false;
-
-    public bool IsAttacking() => isAttacking;
-    void Start()
+    public void Attack()
     {
-        isAttacking = false;
-    }
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(new Vector2(_attackPoint.transform.position.x, _attackPoint.transform.position.y), _radius);
 
-    public void StartAttacking(Character2DHealth enemyHealth)
-    {
-        attackCoroutine = Attack(enemyHealth);
-        isAttacking = true;
-        StartCoroutine(attackCoroutine);
-    }
-
-    public void StopAttacking()
-    {
-        if(attackCoroutine != null)
+        foreach(Collider2D collider in hitColliders)
         {
-            isAttacking = false;
-            StopCoroutine(attackCoroutine);
+            Character2DHealth enemyHealthComponent = null;
+
+            if (!collider.gameObject.TryGetComponent<Character2DHealth>(out enemyHealthComponent))
+                continue;
+
+            if (CompareTag(enemyHealthComponent.gameObject.tag))
+                continue;
+
+            Debug.Log("Enemy tag is " + enemyHealthComponent.gameObject.tag);
+            Debug.Log("My tag is " + gameObject.tag);
+
+            Attack(enemyHealthComponent);
         }
     }
-    IEnumerator Attack(Character2DHealth enemyHealth)
-    {
-        while(enemyHealth != null && enemyHealth.GetHealth() > 0.0f)
-        {
-            enemyHealth.SetHealth(enemyHealth.GetHealth() - damage);
-            yield return new WaitForSeconds(1);
-        }
 
-        enemyHealth.gameObject.GetComponent<Character2DCombat>().StopAttacking();
+    public void Attack(Character2DHealth enemyHealth)
+    {
+        enemyHealth.SetHealth(Mathf.Max(enemyHealth.GetHealth() - _damage, 0.0f));
     }
-    
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(_attackPoint.transform.position, _radius);
+    }
 }

@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 using UnityEngine;
-using UnityEditor.ShaderGraph.Internal;
 
 public class FightLevelController : MonoBehaviour
 {
     public static FightLevelController instance = null;
+
+    public enum MapSlot { Free, BusyWithAlly, BusyWithEnemy, Busy};
 
     // --> 0 - free slot
     // --> 1 - slot is busy with "ally"
     // --> 2 - slot is busy with "enemy"
     // --> 3 - slot is busy with everything else
     private List<int> _mapSlots;
+    private List<int> _mapSlotInstanceIDs;
     public List<int> GetMap => _mapSlots;
 
     private List<GameObject> _allyUnits;
@@ -26,6 +28,9 @@ public class FightLevelController : MonoBehaviour
 
     [SerializeField] private CharacterSpawner _allySpawner;
     [SerializeField] private CharacterSpawner _enemySpawner;
+
+    private List<int> _allyUnitsToDestroy;
+    private List<int> _enemyUnitsToDestroy;
 
     public float GetLeftCastleX => leftCastle.transform.position.x;
     public float GetRightCastleX => rightCastle.transform.position.x;
@@ -46,9 +51,16 @@ public class FightLevelController : MonoBehaviour
         {
             Capacity = UnitsSlotsCount
         };
+        _mapSlotInstanceIDs = new List<int>
+        {
+            Capacity = UnitsSlotsCount
+        };
 
         _allyUnits = new List<GameObject>();
         _enemyUnits = new List<GameObject>();
+
+        _allyUnitsToDestroy = new List<int>();
+        _enemyUnitsToDestroy = new List<int>();
 
         _allyUnits.Capacity = (int)maxAllyUnits;
         _enemyUnits.Capacity = (int)maxEnemyUnits;
@@ -56,93 +68,136 @@ public class FightLevelController : MonoBehaviour
         while ( _mapSlots.Count < UnitsSlotsCount)
         {
             _mapSlots.Add(0);
+            _mapSlotInstanceIDs.Add(-1);
         }
     }
 
     public void Update()
     {
-        foreach(GameObject unit in _allyUnits)
+        int maxUnits = Mathf.Max(_allyUnits.Count, _enemyUnits.Count);
+
+        for(int i = 0; i < maxUnits; ++i)
         {
-            NPC npcComponent = unit.GetComponent<NPC>();
-            npcComponent.UpdateCharacter();
-
-            int characterIndex = GetMapSlotByPosition(unit.transform.position.x);
-
-            if(characterIndex != npcComponent.myIndexInUnitsPositions)
-            {
-                _mapSlots[npcComponent.myIndexInUnitsPositions] = 0;
-                npcComponent.myIndexInUnitsPositions = characterIndex;
-                _mapSlots[characterIndex] = 1;
-            }
-
-            int nextIndex = characterIndex + 1;
-
-            float cellSize = GetMapDistance / (float)_mapSlots.Count;
-
-            if (npcComponent.transform.position.x < (GetLeftCastleX + characterIndex * cellSize + 0.5f * cellSize))
-            {
-                continue;
-            }
-
-            if(nextIndex >= UnitsSlotsCount || nextIndex < 0)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Idle);
-            }
-            if(_mapSlots[nextIndex] == 2)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Fighting);
-            }
-            if (_mapSlots[nextIndex] == 1)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Idle);
-            }
-            if (_mapSlots[nextIndex] == 0)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Moving);
-            }
+            if (i < _allyUnits.Count)
+                UpdateUnit(_allyUnits[i], i);
+            if (i < _enemyUnits.Count)
+                UpdateUnit(_enemyUnits[i], i);
         }
 
-        foreach(GameObject unit in _enemyUnits)
+        for(int i = 0; i < _allyUnitsToDestroy.Count; i++)
         {
-            NPC npcComponent = unit.GetComponent<NPC>();
-            npcComponent.UpdateCharacter();
+            GameObject go = _allyUnits[i];
+            _allyUnits.RemoveAt(i);
+            Destroy(go);
+        }
 
-            int characterIndex = GetMapSlotByPosition(unit.transform.position.x);
-            if (characterIndex != npcComponent.myIndexInUnitsPositions)
-            {
-                _mapSlots[npcComponent.myIndexInUnitsPositions] = 0;
-                npcComponent.myIndexInUnitsPositions = characterIndex;
-                _mapSlots[characterIndex] = 2;
-            }
+        for (int i = 0; i < _enemyUnitsToDestroy.Count; i++)
+        {
+            GameObject go = _enemyUnits[i];
+            _enemyUnits.RemoveAt(i);
+            Destroy(go);
+        }
 
-            int nextIndex = characterIndex - 1;
+        _allyUnitsToDestroy.Clear();
+        _enemyUnitsToDestroy.Clear();
+    }
 
-            float cellSize = GetMapDistance / (float)_mapSlots.Count;
+    public void UpdateUnit(GameObject unit, int indexInContainer)
+    {
+        NPC npcComponent = unit.GetComponent<NPC>();
 
-            if (npcComponent.transform.position.x > (GetLeftCastleX + characterIndex * cellSize + 0.5f * cellSize))
-            {
-                continue;
-            }
+        int characterIndex = GetMapSlotByPosition(unit.transform.position.x);
 
-            if (nextIndex >= UnitsSlotsCount || nextIndex < 0)
+        if (npcComponent.IsDead())
+        {
+            List<int> deadList = unit.CompareTag("Ally") ? _allyUnitsToDestroy : _enemyUnitsToDestroy;
+
+            deadList.Add(indexInContainer);
+            _mapSlots[characterIndex] = 0;
+            _mapSlotInstanceIDs[characterIndex] = -1;
+            return;
+        }
+
+        npcComponent.UpdateCharacter();
+
+        UpdateCharacterIndexInMap(npcComponent, characterIndex);
+
+        if (!ReachedTheCellCenter(npcComponent, characterIndex))
+            return;
+
+        UpdateUnitState(npcComponent, characterIndex);
+    }
+
+    public void UpdateCharacterIndexInMap(NPC npc, int characterIndex)
+    {
+        int occupancyValue = npc.gameObject.CompareTag("Ally") ? 1 : 2;
+
+        if(characterIndex != npc.myIndexInUnitsPositions)
+        {
+            _mapSlots[npc.myIndexInUnitsPositions] = 0;
+
+            npc.myIndexInUnitsPositions = characterIndex;
+            _mapSlots[characterIndex] = occupancyValue;
+            _mapSlotInstanceIDs[characterIndex] = -1;
+        }
+    }
+
+    public bool ReachedTheCellCenter(NPC npc, int characterIndex)
+    {
+        float cellSize = GetMapDistance / (float)_mapSlots.Count;
+
+        if (npc.CompareTag("Ally"))
+        {
+            return !(npc.transform.position.x < (GetLeftCastleX + characterIndex * cellSize + 0.5f * cellSize));
+        }
+        else
+        {
+            return !(npc.transform.position.x > (GetLeftCastleX + characterIndex * cellSize + 0.5f * cellSize));
+        }
+    }
+
+    public void UpdateUnitState(NPC npc, int characterIndex)
+    {
+        // TODO: One string comparison instead of three
+        int occupancyValue      = npc.gameObject.CompareTag("Ally") ? (int)MapSlot.BusyWithAlly : (int)MapSlot.BusyWithEnemy;
+        int enemyOccupancyValue = npc.gameObject.CompareTag("Ally") ? (int)MapSlot.BusyWithEnemy : (int)MapSlot.BusyWithAlly;
+        int nextIndex           = npc.gameObject.CompareTag("Ally") ? characterIndex + 1 : characterIndex - 1;
+
+        int objectID = npc.gameObject.GetInstanceID();
+
+        if (nextIndex >= UnitsSlotsCount || nextIndex < 0)
+        {
+            npc.SetCharacterState(NPC.CharacterState.Idle);
+            return;
+        }
+
+        if(_mapSlots[nextIndex] == enemyOccupancyValue)
+        {
+            npc.SetCharacterState(NPC.CharacterState.Fighting);
+            return;
+        }
+        if (_mapSlots[nextIndex] == occupancyValue)
+        {
+            npc.SetCharacterState(NPC.CharacterState.Idle);
+            return;
+        }
+        if (_mapSlots[nextIndex] == 0)
+        {
+            _mapSlots[nextIndex] = (int)MapSlot.Busy;
+            _mapSlotInstanceIDs[nextIndex] = objectID;
+
+            npc.SetCharacterState(NPC.CharacterState.Moving);
+            return;
+        }
+        if (_mapSlots[nextIndex] == (int)MapSlot.Busy)
+        {
+            if (_mapSlotInstanceIDs[nextIndex] == objectID)
             {
-                npcComponent.SetCharacterState(NPC.CharacterState.Idle);
-                continue;
+                npc.SetCharacterState(NPC.CharacterState.Moving);
             }
-            if (_mapSlots[nextIndex] == 1)
+            else
             {
-                npcComponent.SetCharacterState(NPC.CharacterState.Fighting);
-                continue;
-            }
-            if (_mapSlots[nextIndex] == 2)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Idle);
-                continue;
-            }
-            if (_mapSlots[nextIndex] == 0)
-            {
-                npcComponent.SetCharacterState(NPC.CharacterState.Moving);
-                continue;
+                npc.SetCharacterState(NPC.CharacterState.Idle);
             }
         }
     }
@@ -153,20 +208,37 @@ public class FightLevelController : MonoBehaviour
 
         if (_mapSlots == null)
         {
-            //Debug.Log("Map slots is bull");
             return;
         }
 
-        for(int i = 0; i <= _mapSlots.Count; i++)
+        for(int i = 0; i < _mapSlots.Count; ++i)
         {
-            float t = (float)i / (float)_mapSlots.Count;
+            float t0 = (float)(i) / (float)(_mapSlots.Count);
+            float t1 = (float)(i + 1) / (float)_mapSlots.Count;
 
-            Vector3 partBorderPoint = Vector3.Lerp(leftCastle.transform.position, rightCastle.transform.position, t);
-            Vector3 bottomPoint = partBorderPoint;
-            bottomPoint.y = GetGroundLevel();
-            Vector3 topPoint = partBorderPoint + Vector3.up * 5.0f;
+            float d0 = GetLeftCastleX + t0 * GetMapDistance;
+            float d1 = GetLeftCastleX + t1 * GetMapDistance;
 
-            Gizmos.DrawLine(bottomPoint, topPoint);
+            float centerX = (d1 + d0) / 2.0f;
+
+            if (_mapSlots[i] == 0)
+            {
+                Gizmos.color = Color.white;
+            }
+            if (_mapSlots[i] == 1)
+            {
+                Gizmos.color = Color.green;
+            }
+            if (_mapSlots[i] == 2)
+            {
+                Gizmos.color = Color.red;
+            }
+            if (_mapSlots[i] == 3)
+            {
+                Gizmos.color = Color.yellow;
+            }
+
+            Gizmos.DrawWireCube(new Vector3(centerX, -3.0f), new Vector3(d1 - d0, 2.0f));
         }
     }
 
@@ -191,6 +263,9 @@ public class FightLevelController : MonoBehaviour
     {
         if(_allyUnits.Count < maxAllyUnits)
         {
+            if (_mapSlots[0] != 0)
+                return;
+
             Vector2 position = new(GetLeftCastleX, GetGroundLevel() + 0.1f * (12.88896f / 2.0f));
             _allyUnits.Add(SpawnAlly(position));
             _mapSlots[GetMapSlotByPosition(position.x)] = 1;
@@ -199,6 +274,9 @@ public class FightLevelController : MonoBehaviour
 
     public void SpawnEnemy()
     {
+        if (_mapSlots[UnitsSlotsCount - 1] != 0)
+            return;
+
         if (_enemyUnits.Count < maxEnemyUnits)
         {
             Vector2 position = new(GetRightCastleX, GetGroundLevel() + 0.1f * (12.88896f / 2.0f));
