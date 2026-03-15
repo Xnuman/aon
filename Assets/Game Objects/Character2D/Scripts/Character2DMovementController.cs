@@ -3,8 +3,7 @@ using UnityEngine;
 public class Character2DMovementController : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    [SerializeField] private float _speed;
-    [SerializeField] private float jumpPower;
+    private float _speed;
 
     private int _orientationMultiplier = 1;
     private void FixedUpdate()

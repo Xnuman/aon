@@ -7,6 +7,9 @@ public class Character2DCombat : MonoBehaviour
     [SerializeField] private GameObject _attackPoint;
     [SerializeField] private float _radius;
 
+    [SerializeField] private int _attackRange; // TODO: Move to CharacterConfig
+    public int GetAttackRange => _attackRange;
+
     //[SerializeField] private LayerMask enemyLayerMask;
 
     public void Attack()
@@ -22,9 +25,6 @@ public class Character2DCombat : MonoBehaviour
 
             if (CompareTag(enemyHealthComponent.gameObject.tag))
                 continue;
-
-            Debug.Log("Enemy tag is " + enemyHealthComponent.gameObject.tag);
-            Debug.Log("My tag is " + gameObject.tag);
 
             Attack(enemyHealthComponent);
         }

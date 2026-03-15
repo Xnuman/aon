@@ -13,7 +13,7 @@ public class FightLevelController : MonoBehaviour
     // --> 2 - slot is busy with "enemy"
     // --> 3 - slot is busy with everything else
     private List<int> _mapSlots;
-    private List<int> _mapSlotInstanceIDs;
+    private List<EntityId> _mapSlotInstanceIDs;
     public List<int> GetMap => _mapSlots;
 
     private List<GameObject> _allyUnits;
@@ -51,7 +51,7 @@ public class FightLevelController : MonoBehaviour
         {
             Capacity = UnitsSlotsCount
         };
-        _mapSlotInstanceIDs = new List<int>
+        _mapSlotInstanceIDs = new List<EntityId>
         {
             Capacity = UnitsSlotsCount
         };
@@ -68,7 +68,7 @@ public class FightLevelController : MonoBehaviour
         while ( _mapSlots.Count < UnitsSlotsCount)
         {
             _mapSlots.Add(0);
-            _mapSlotInstanceIDs.Add(-1);
+            _mapSlotInstanceIDs.Add(EntityId.None);
         }
     }
 
@@ -114,7 +114,7 @@ public class FightLevelController : MonoBehaviour
 
             deadList.Add(indexInContainer);
             _mapSlots[characterIndex] = 0;
-            _mapSlotInstanceIDs[characterIndex] = -1;
+            _mapSlotInstanceIDs[characterIndex] = EntityId.None;
             return;
         }
 
@@ -138,7 +138,7 @@ public class FightLevelController : MonoBehaviour
 
             npc.myIndexInUnitsPositions = characterIndex;
             _mapSlots[characterIndex] = occupancyValue;
-            _mapSlotInstanceIDs[characterIndex] = -1;
+            _mapSlotInstanceIDs[characterIndex] = EntityId.None;
         }
     }
 
@@ -163,7 +163,11 @@ public class FightLevelController : MonoBehaviour
         int enemyOccupancyValue = npc.gameObject.CompareTag("Ally") ? (int)MapSlot.BusyWithEnemy : (int)MapSlot.BusyWithAlly;
         int nextIndex           = npc.gameObject.CompareTag("Ally") ? characterIndex + 1 : characterIndex - 1;
 
-        int objectID = npc.gameObject.GetInstanceID();
+
+        int factionModifier = npc.gameObject.CompareTag("Ally") ? 1 : -1;
+        int attackRangeIndex = characterIndex + factionModifier * npc.GetCombatComponent.GetAttackRange;
+
+        EntityId objectID = npc.gameObject.GetEntityId();
 
         if (nextIndex >= UnitsSlotsCount || nextIndex < 0)
         {
@@ -171,11 +175,15 @@ public class FightLevelController : MonoBehaviour
             return;
         }
 
-        if(_mapSlots[nextIndex] == enemyOccupancyValue)
+        if( attackRangeIndex >= 0 && attackRangeIndex < UnitsSlotsCount )
         {
-            npc.SetCharacterState(NPC.CharacterState.Fighting);
-            return;
+            if (_mapSlots[attackRangeIndex] == enemyOccupancyValue)
+            {
+                npc.SetCharacterState(NPC.CharacterState.Fighting);
+                return;
+            }
         }
+
         if (_mapSlots[nextIndex] == occupancyValue)
         {
             npc.SetCharacterState(NPC.CharacterState.Idle);

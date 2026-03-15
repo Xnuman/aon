@@ -6,11 +6,13 @@ public class NPC : MonoBehaviour
 
     [SerializeField] private Character2DMovementController _movementController;
     [SerializeField] private Character2DAnimatorController _animatorController;
-    [SerializeField] private Character2DCombat combat;
+    [SerializeField] private Character2DCombat _combat;
     [SerializeField] private Character2DHealth _health;
     [SerializeField] private Rigidbody2D rb;
 
     public int myIndexInUnitsPositions;
+
+    public Character2DCombat GetCombatComponent => _combat;
 
     public bool IsDead()
     {
