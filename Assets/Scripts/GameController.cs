@@ -22,6 +22,17 @@ public class GameController : MonoBehaviour
     public SettingsData.AudioSettings GetDefaultAudioSettings => m_defaultAudioSettings;
     public SettingsData.GraphicsSettings GetGraphicsSettings => settings._graphicsSettings;
     public SettingsData.GraphicsSettings GetDefaultGraphicsSettings => m_defaultGraphicsSettings;
+
+    private bool _gamePaused = false;
+
+    public void SetGamePaused(bool gamePaused)
+    {
+        _gamePaused = gamePaused;
+    }
+    public bool IsGamePaused()
+    {
+        return _gamePaused;
+    }
     private void Awake()
     {
         if (instance != null)
@@ -54,7 +65,8 @@ public class GameController : MonoBehaviour
         {
             m_audioManager.Init();
         }
-        if( m_dialogueManager )
+        // TODO: Move to level loading
+        if( SceneManager.GetActiveScene().name == "MainMenuScene" )
         {
             GameObject canvas = GameObject.Find("Canvas");
             var cc = canvas.GetComponent<Canvas>();

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.Assertions;
 using UnityEngine;
+using TMPro;
 
 public class FightLevelController : MonoBehaviour
 {
@@ -38,6 +39,19 @@ public class FightLevelController : MonoBehaviour
 
     [SerializeField] private int UnitsSlotsCount;
 
+    private float _playerGold = 0.0f;
+    private float _enemyGold = 0.0f;
+
+    [SerializeField] private TMPro.TMP_Text _playerGoldTextValue;
+    [SerializeField] private TMPro.TMP_Text _enemyGoldTextValue;
+
+    
+
+    // TODO: Replace with getting cost from units table
+    [SerializeField] private float _playerUnitCost = 1.0f;
+    [SerializeField] private float _enemyUnitCost = 1.0f;
+
+
     public void Awake()
     {
         if(instance == null)
@@ -74,9 +88,23 @@ public class FightLevelController : MonoBehaviour
 
     public void Update()
     {
+
+        if (GameController.instance.IsGamePaused())
+        {
+            return;
+        }
+
+        UpdateUnits();
+
+        _playerGoldTextValue.text = _playerGold.ToString();
+        _enemyGoldTextValue.text = _enemyGold.ToString();
+    }
+
+    public void UpdateUnits()
+    {
         int maxUnits = Mathf.Max(_allyUnits.Count, _enemyUnits.Count);
 
-        for(int i = 0; i < maxUnits; ++i)
+        for (int i = 0; i < maxUnits; ++i)
         {
             if (i < _allyUnits.Count)
                 UpdateUnit(_allyUnits[i], i);
@@ -84,11 +112,12 @@ public class FightLevelController : MonoBehaviour
                 UpdateUnit(_enemyUnits[i], i);
         }
 
-        for(int i = 0; i < _allyUnitsToDestroy.Count; i++)
+        for (int i = 0; i < _allyUnitsToDestroy.Count; i++)
         {
             GameObject go = _allyUnits[i];
             _allyUnits.RemoveAt(i);
             Destroy(go);
+            _enemyGold += _playerUnitCost;
         }
 
         for (int i = 0; i < _enemyUnitsToDestroy.Count; i++)
@@ -96,6 +125,7 @@ public class FightLevelController : MonoBehaviour
             GameObject go = _enemyUnits[i];
             _enemyUnits.RemoveAt(i);
             Destroy(go);
+            _playerGold += _enemyUnitCost;
         }
 
         _allyUnitsToDestroy.Clear();

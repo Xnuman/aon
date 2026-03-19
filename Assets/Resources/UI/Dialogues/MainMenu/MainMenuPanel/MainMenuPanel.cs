@@ -13,14 +13,11 @@ public class MainMenuPanel : MonoBehaviour
 
     public void Init(Canvas canvas)
     {
-        Debug.Log("MainMenuPanel: Init");
-
         _dialogueManager = GameController.instance.m_dialogueManager;
         _canvas = canvas;
 
         _NewGame.onClick.AddListener(() =>
         {
-            Debug.Log("NewGame: OnClick");
             StartGameDialogYes();
         });
 
