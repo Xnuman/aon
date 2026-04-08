@@ -11,14 +11,12 @@ public class Projectile : MonoBehaviour
 
     private float time = 5;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //_rb.linearVelocity = new Vector2(1.0f, 1.0f) * _startSpeed;
         startPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         t = (time * t + Time.deltaTime) / time;
