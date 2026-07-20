@@ -65,6 +65,12 @@ public class GameController : MonoBehaviour
         {
             m_audioManager.Init();
         }
+
+        if( SceneManager.GetActiveScene().name == "BootstrapScene")
+        {
+            // Do default level loading
+        }
+
         // TODO: Move to level loading
         if( SceneManager.GetActiveScene().name == "MainMenuScene" )
         {
